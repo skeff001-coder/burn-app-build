@@ -1,1 +1,22 @@
-name:%20Build%20iOS%0Aon%3A%0A%20%20workflow_dispatch%3A%0Ajobs%3A%0A%20%20build%3A%0A%20%20%20%20runs-on%3A%20ubuntu-latest%0A%20%20%20%20steps%3A%0A%20%20%20%20%20%20-%20name%3A%20Checkout%0A%20%20%20%20%20%20%20%20uses%3A%20actions/checkout@v3%0A%20%20%20%20%20%20-%20name:%20Setup%20Node%0A%20%20%20%20%20%20%20%20uses:%20actions/setup-node@v3%0A%20%20%20%20%20%20%20%20with:%0A%20%20%20%20%20%20%20%20%20%20node-version:%2018%0A%20%20%20%20%20%20-%20name:%20Setup%20Expo%0A%20%20%20%20%20%20%20%20uses:%20expo/expo-github-action@v8%0A%20%20%20%20%20%20%20%20with:%0A%20%20%20%20%20%20%20%20%20%20eas-version:%20latest%0A%20%20%20%20%20%20%20%20%20%20token:%20$%7B%7B%20secrets.EXPO_TOKEN%20%7D%7D%0A%20%20%20%20%20%20-%20name:%20Install%20Dependencies%0A%20%20%20%20%20%20%20%20run:%20npm%20install%0A%20%20%20%20%20%20-%20name:%20Build%20iOS%0A%20%20%20%20%20%20%20%20run:%20npx%20eas-cli%20build%20--platform%20ios%20--non-interactive%0
+name: Build iOS
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install Dependencies
+        run: npm install
+      - name: Build iOS
+        run: npx eas-cli build --platform ios --non-interactive
