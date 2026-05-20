@@ -1,15 +1,20 @@
 {
   "expo": {
+    "name": "effortless BURN",
+    "slug": "effortless-burn",
+    "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.effortlessburn.app",
+      "buildNumber": "10",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
     "extra": {
       "eas": {
         "projectId": "e4b0d15e-3254-475e-91ce-8da7284ee720"
       }
-    },
-    "ios": {
-      "bundleIdentifier": "com.effortlessburn.app",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
     }
   }
 }
+
