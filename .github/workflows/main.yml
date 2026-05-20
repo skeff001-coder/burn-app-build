@@ -11,11 +11,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Install EAS CLI
-        run: npm install -g eas-cli
+        run: pnpm add -g eas-cli
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
       - name: Build iOS
-        run: eas build --platform ios --non-interactive
+        run: pnpm exec eas build --platform ios --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
