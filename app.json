@@ -2,10 +2,10 @@
   "expo": {
     "name": "effortless BURN",
     "slug": "effortless-burn",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "ios": {
       "bundleIdentifier": "com.effortlessburn.app",
-      "buildNumber": "10",
+      "buildNumber": "18",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
