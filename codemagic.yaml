@@ -3,6 +3,7 @@ workflows:
     name: iOS Release
     max_build_duration: 120
     instance_type: mac_mini_m2
+    working_directory: artifacts/mobile
     integrations:
       app_store_connect: codemagic
     environment:
@@ -18,24 +19,17 @@ workflows:
       - name: Install pnpm
         script: npm install -g pnpm
       - name: Install dependencies
-        script: |
-          cd artifacts/mobile
-          pnpm install --no-frozen-lockfile
+        script: pnpm install --no-frozen-lockfile
       - name: Set up Expo credentials
-        script: |
-          cd artifacts/mobile
-          npx expo install --fix
+        script: npx expo install --fix
       - name: Prebuild iOS
-        script: |
-          cd artifacts/mobile
-          npx expo prebuild --platform ios --clean
+        script: npx expo prebuild --platform ios --clean
       - name: Install CocoaPods
         script: |
-          cd artifacts/mobile/ios
+          cd ios
           pod install
       - name: Build iOS
         script: |
-          cd artifacts/mobile
           xcode-project use-profiles
           xcode-project build-ipa \
             --workspace ios/EffortlessBurn.xcworkspace \
