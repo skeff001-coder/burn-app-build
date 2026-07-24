@@ -1,0 +1,48 @@
+workflows:
+  ios-release:
+    name: iOS Release
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.effortlessburn.app
+      node: 22.12.0
+      vars:
+        BUNDLE_ID: com.effortlessburn.app
+        XCODE_WORKSPACE: ios/EffortlessBurn.xcworkspace
+        XCODE_SCHEME: EffortlessBurn
+    scripts:
+      - name: Install pnpm
+        script: npm install -g pnpm
+      - name: Install dependencies
+        script: |
+          cd artifacts/mobile
+          pnpm install --no-frozen-lockfile
+      - name: Set up Expo credentials
+        script: |
+          cd artifacts/mobile
+          npx expo install --fix
+      - name: Prebuild iOS
+        script: |
+          cd artifacts/mobile
+          npx expo prebuild --platform ios --clean
+      - name: Install CocoaPods
+        script: |
+          cd artifacts/mobile/ios
+          pod install
+      - name: Build iOS
+        script: |
+          cd artifacts/mobile
+          xcode-project use-profiles
+          xcode-project build-ipa \
+            --workspace ios/EffortlessBurn.xcworkspace \
+            --scheme EffortlessBurn
+    artifacts:
+      - artifacts/mobile/build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
