@@ -36,8 +36,11 @@ workflows:
           xcode-project build-ipa \
             --workspace ios/effortlessBURN.xcworkspace \
             --scheme effortlessBURN
+      - name: Locate ipa (diagnostic)
+        script: find "$CM_BUILD_DIR" -name "*.ipa" -print
     artifacts:
-      - artifacts/mobile/build/ios/ipa/*.ipa
+      - "**/*.ipa"
+      - "**/build/ios/ipa/*.ipa"
     publishing:
       app_store_connect:
         auth: integration
