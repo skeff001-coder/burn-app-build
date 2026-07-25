@@ -17,7 +17,7 @@ export interface LevelPack {
 // these without also updating the products there, or purchases will fail.
 export const LEVEL_PACKS: Record<3 | 4 | 5, LevelPack> = {
   3: {
-    productId: "com.effortlessburn.app.active",
+    productId: "com.effortlessburn.pack.active",
     name: "Active Pack",
     tagline: "More movement, bigger burns",
     emoji: "🔥",
@@ -27,7 +27,7 @@ export const LEVEL_PACKS: Record<3 | 4 | 5, LevelPack> = {
     dailyCalorieTarget: 250,
   },
   4: {
-    productId: "com.effortlessburn.app.fitness",
+    productId: "com.effortlessburn.pack.fitness",
     name: "Fitness Pack",
     tagline: "Structured cardio snacks",
     emoji: "⚡",
@@ -37,7 +37,7 @@ export const LEVEL_PACKS: Record<3 | 4 | 5, LevelPack> = {
     dailyCalorieTarget: 350,
   },
   5: {
-    productId: "com.effortlessburn.app.gladiator",
+    productId: "com.effortlessburn.pack.gladiator",
     name: "Gladiator Pack",
     tagline: "The full Desk Dungeon",
     emoji: "🏆",
