@@ -5,7 +5,7 @@ workflows:
     instance_type: mac_mini_m2
     working_directory: artifacts/mobile
     integrations:
-      app_store_connect: codemagic
+      app_store_connect: "ONJJEM Codemagic"
     environment:
       ios_signing:
         distribution_type: app_store
