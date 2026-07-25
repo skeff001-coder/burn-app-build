@@ -13,26 +13,37 @@ Remove this once React Native ships a fmt version that's fixed upstream
 — see facebook/react-native#55601 and expo/expo#44229.
 """
 
+import re
+
 PODFILE = "ios/Podfile"
-MARKER = "react_native_post_install(installer, config[:reactNativePath])"
-PATCH = """
-    installer.pods_project.targets.each do |target|
+PATCH_LINES = """    installer.pods_project.targets.each do |target|
       if target.name == 'fmt'
         target.build_configurations.each do |config|
           config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
         end
       end
-    end"""
+    end
+"""
 
 with open(PODFILE) as f:
     content = f.read()
 
 if "target.name == 'fmt'" in content:
     print("fmt patch already present — skipping")
-elif MARKER not in content:
-    print(f"WARNING: marker not found in {PODFILE} — Podfile template may have changed, patch not applied")
 else:
-    content = content.replace(MARKER, MARKER + PATCH)
-    with open(PODFILE, "w") as f:
-        f.write(content)
-    print("Patched Podfile: fmt pod pinned to C++17 (Xcode 26 consteval workaround)")
+    # Match the post_install block opener regardless of exact surrounding
+    # content — this is far more stable across Expo/Podfile template
+    # versions than matching one specific line inside the block.
+    match = re.search(r"(post_install do \|installer\|\s*\n)", content)
+    if match:
+        insert_at = match.end()
+        content = content[:insert_at] + PATCH_LINES + content[insert_at:]
+        with open(PODFILE, "w") as f:
+            f.write(content)
+        print("Patched Podfile: fmt pod pinned to C++17 (Xcode 26 consteval workaround)")
+    else:
+        print("WARNING: could not find 'post_install do |installer|' block — dumping Podfile for diagnosis:")
+        print("=" * 60)
+        print(content)
+        print("=" * 60)
+
