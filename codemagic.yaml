@@ -7,7 +7,6 @@ workflows:
     integrations:
       app_store_connect: "ONJJEM Codemagic"
     environment:
-      xcode: 16.4
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.effortlessburn.app
@@ -26,6 +25,8 @@ workflows:
         script: npx expo install --fix
       - name: Prebuild iOS
         script: npx expo prebuild --platform ios --clean
+      - name: Patch Podfile for Xcode 26 fmt compat bug
+        script: python3 scripts/patch-podfile.py
       - name: Install CocoaPods
         script: |
           cd ios
