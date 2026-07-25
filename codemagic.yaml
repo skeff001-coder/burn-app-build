@@ -15,6 +15,7 @@ workflows:
         BUNDLE_ID: com.effortlessburn.app
         XCODE_WORKSPACE: ios/EffortlessBurn.xcworkspace
         XCODE_SCHEME: EffortlessBurn
+        COREPACK_INTEGRITY_KEYS: "0"
     scripts:
       - name: Install pnpm
         script: command -v pnpm || npm install -g pnpm
