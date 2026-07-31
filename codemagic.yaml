@@ -17,6 +17,11 @@ workflows:
         XCODE_SCHEME: effortlessBURN
         COREPACK_INTEGRITY_KEYS: "0"
     scripts:
+      - name: DIAGNOSTIC canary check
+        script: |
+          echo "CANARY-VALUE-9284"
+          date
+          git -C $CM_BUILD_DIR log -1 --format="%H %s"
       - name: Install pnpm
         script: command -v pnpm || npm install -g pnpm
       - name: Install dependencies
