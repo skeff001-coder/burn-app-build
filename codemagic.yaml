@@ -26,8 +26,6 @@ workflows:
         script: command -v pnpm || npm install -g pnpm
       - name: Install dependencies
         script: pnpm install --no-frozen-lockfile
-      - name: Set up Expo credentials
-        script: npx expo install --fix
       - name: Show app.json build number
         script: |
           echo "Current directory:"
