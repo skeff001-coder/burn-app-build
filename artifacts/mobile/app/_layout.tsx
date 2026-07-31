@@ -15,6 +15,7 @@ import { AppProvider } from "@/context/AppContext";
 import { IAPProvider } from "@/context/IAPContext";
 import { LevelProvider } from "@/context/LevelContext";
 import { LevelUpModal } from "@/components/LevelUpModal";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,16 +47,18 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <AppProvider>
-          <IAPProvider>
-            <LevelProvider>
-              <RootLayoutNav />
-            </LevelProvider>
-          </IAPProvider>
-        </AppProvider>
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AppProvider>
+            <IAPProvider>
+              <LevelProvider>
+                <RootLayoutNav />
+              </LevelProvider>
+            </IAPProvider>
+          </AppProvider>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }
