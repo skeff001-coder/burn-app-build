@@ -25,6 +25,11 @@ workflows:
         script: npx expo install --fix
       - name: Show app.json build number
         script: |
+          echo "Current directory:"
+          pwd
+          echo "All app.json files in repo:"
+          find $CM_BUILD_DIR -name "app.json" -not -path "*/node_modules/*"
+          echo "Contents of ./app.json buildNumber:"
           cat app.json | grep -A1 buildNumber
       - name: Prebuild iOS
         script: npx expo prebuild --platform ios --clean
