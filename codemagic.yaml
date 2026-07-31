@@ -25,6 +25,9 @@ workflows:
         script: npx expo install --fix
       - name: Prebuild iOS
         script: npx expo prebuild --platform ios --clean
+      - name: Check generated build number
+        script: |
+          grep -A1 CFBundleVersion ios/effortlessBURN/Info.plist
       - name: Patch Podfile for Xcode 26 fmt compat bug
         script: python3 scripts/patch-podfile.py
       - name: Install CocoaPods
