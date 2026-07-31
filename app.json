@@ -5,7 +5,7 @@
     "version": "1.0.2",
     "ios": {
       "bundleIdentifier": "com.effortlessburn.app",
-      "buildNumber": "19",
+      "buildNumber": "32",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
