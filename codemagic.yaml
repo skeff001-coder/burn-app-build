@@ -23,6 +23,9 @@ workflows:
         script: pnpm install --no-frozen-lockfile
       - name: Set up Expo credentials
         script: npx expo install --fix
+      - name: Show app.json build number
+        script: |
+          cat app.json | grep -A1 buildNumber
       - name: Prebuild iOS
         script: npx expo prebuild --platform ios --clean
       - name: Check generated build number
