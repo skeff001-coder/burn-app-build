@@ -63,4 +63,11 @@ const styles = StyleSheet.create({
   error: { color: "#ff6b6b", fontSize: 14, lineHeight: 20 },
   stack: { color: "#aaa", fontSize: 11, lineHeight: 16, fontFamily: "Courier" },
   button: {
-    marginTop:
+    marginTop: 30,
+    backgroundColor: "#f5a623",
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  buttonText: { color: "#0a0e1a", fontWeight: "700" },
+});
