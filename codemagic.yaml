@@ -6,10 +6,17 @@ workflows:
     working_directory: artifacts/mobile
     integrations:
       app_store_connect: "ONJJEM Codemagic"
-    environment:
+environment:
+      groups:
+        - ios_release_vars
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.effortlessburn.app
+      node: 22.12.0
+      vars:
+        BUNDLE_ID: com.effortlessburn.app
+        ...
+
       node: 22.12.0
       vars:
         BUNDLE_ID: com.effortlessburn.app
