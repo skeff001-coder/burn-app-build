@@ -1,12 +1,12 @@
 workflows:
   ios-release:
-    name: iOS Release
+        name: iOS Release
     max_build_duration: 120
     instance_type: mac_mini_m2
     working_directory: artifacts/mobile
     integrations:
       app_store_connect: "ONJJEM Codemagic"
-environment:
+    environment:
       groups:
         - ios_release_vars
       ios_signing:
@@ -15,14 +15,10 @@ environment:
       node: 22.12.0
       vars:
         BUNDLE_ID: com.effortlessburn.app
-        ...
-
-      node: 22.12.0
-      vars:
-        BUNDLE_ID: com.effortlessburn.app
         XCODE_WORKSPACE: ios/effortlessBURN.xcworkspace
         XCODE_SCHEME: effortlessBURN
         COREPACK_INTEGRITY_KEYS: "0"
+
     scripts:
       - name: DIAGNOSTIC canary check
         script: |
