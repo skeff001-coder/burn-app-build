@@ -24,7 +24,8 @@
     "web": {
       "favicon": "./assets/images/icon.png"
     },
-    "plugins": ["expo-router", "expo-font", "react-native-iap"],
+    "plugins": ["expo-router", "expo-font"],
+
     "experiments": {
       "typedRoutes": true
     }
