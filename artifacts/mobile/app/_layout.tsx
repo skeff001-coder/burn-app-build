@@ -12,7 +12,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AppProvider } from "@/context/AppContext";
-import { IAPProvider } from "@/context/IAPContext";
 import { LevelProvider } from "@/context/LevelContext";
 import { LevelUpModal } from "@/components/LevelUpModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -51,11 +50,9 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <AppProvider>
-            <IAPProvider>
               <LevelProvider>
                 <RootLayoutNav />
               </LevelProvider>
-            </IAPProvider>
           </AppProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
