@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { Platform } from "react-native";
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
+import { Alert, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LEVEL_PACKS } from "@/data/levelActions";
 
@@ -29,6 +29,7 @@ export function IAPProvider({ children }: { children: React.ReactNode }) {
   const [ownedProductIds, setOwnedProductIds] = useState<Set<string>>(new Set());
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const availableSkus = useRef<Set<string>>(new Set());
 
   // Load any previously unlocked packs from disk immediately, so the UI
   // doesn't flash "locked" for a returning customer before StoreKit responds.
@@ -54,7 +55,8 @@ export function IAPProvider({ children }: { children: React.ReactNode }) {
     (async () => {
       try {
         await RNIap.initConnection();
-        await RNIap.getProducts({ skus: ALL_PRODUCT_IDS });
+        const products = await RNIap.getProducts({ skus: ALL_PRODUCT_IDS });
+        availableSkus.current = new Set(products.map((p) => p.productId));
 
         purchaseUpdateSub = RNIap.purchaseUpdatedListener(async (purchase) => {
           const receipt = purchase.transactionReceipt;
@@ -80,6 +82,9 @@ export function IAPProvider({ children }: { children: React.ReactNode }) {
         purchaseErrorSub = RNIap.purchaseErrorListener((error) => {
           console.warn("Purchase error", error);
           setPurchasing(null);
+          if (error?.code !== "E_USER_CANCELLED") {
+            Alert.alert("Purchase failed", error?.message ?? "Please try again.");
+          }
         });
 
         setReady(true);
@@ -115,6 +120,10 @@ export function IAPProvider({ children }: { children: React.ReactNode }) {
         return next;
       });
       setPurchasing(null);
+      return;
+    }
+    if (!availableSkus.current.has(productId)) {
+      Alert.alert("Not available yet", "This pack can't be purchased right now. Please try again later.");
       return;
     }
     setPurchasing(productId);
