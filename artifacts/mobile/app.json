@@ -16,7 +16,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.effortlessburn.app",
-      "buildNumber": "40",
+      "buildNumber": "100",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
