@@ -1,9 +1,12 @@
-import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
+import React, { createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FREE_LEVEL_TARGETS, LEVEL_PACKS } from "@/data/levelActions";
 import { useApp } from "@/context/AppContext";
 import { useIAP } from "@/context/IAPContext";
 
 export type UnlockLevel = 1 | 2 | 3 | 4 | 5;
+
+const ACTIVE_LEVEL_KEY = "effortless-burn:active-level";
 
 function targetFor(level: UnlockLevel): number {
   if (level === 1 || level === 2) return FREE_LEVEL_TARGETS[level];
@@ -12,6 +15,8 @@ function targetFor(level: UnlockLevel): number {
 
 interface LevelContextValue {
   maxAccessibleLevel: UnlockLevel;
+  activeLevel: UnlockLevel; // level the user chose to work on (<= maxAccessibleLevel)
+  setActiveLevel: (level: UnlockLevel) => void;
   unlockedLevel: UnlockLevel | null; // level whose target was hit today
   nextLevel: UnlockLevel | null; // next paid level available to buy
   showLevelUpPrompt: boolean;
@@ -35,6 +40,23 @@ export function LevelProvider({ children }: { children: React.ReactNode }) {
     return level;
   }, [isLevelOwned]);
 
+  const [selectedLevel, setSelectedLevel] = useState<UnlockLevel | null>(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem(ACTIVE_LEVEL_KEY).then((v) => {
+      const n = Number(v);
+      if (n >= 1 && n <= 5) setSelectedLevel(n as UnlockLevel);
+    });
+  }, []);
+
+  const activeLevel: UnlockLevel =
+    selectedLevel !== null && selectedLevel <= maxAccessibleLevel ? selectedLevel : maxAccessibleLevel;
+
+  const setActiveLevel = useCallback((level: UnlockLevel) => {
+    setSelectedLevel(level);
+    AsyncStorage.setItem(ACTIVE_LEVEL_KEY, String(level)).catch(() => {});
+  }, []);
+
   const nextLevel: UnlockLevel | null = maxAccessibleLevel < 5 ? ((maxAccessibleLevel + 1) as UnlockLevel) : null;
 
   const hitTargetToday = todayCalories >= targetFor(maxAccessibleLevel);
@@ -53,7 +75,7 @@ export function LevelProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <LevelContext.Provider
-      value={{ maxAccessibleLevel, unlockedLevel, nextLevel, showLevelUpPrompt, dismissLevelUpPrompt }}
+      value={{ maxAccessibleLevel, activeLevel, setActiveLevel, unlockedLevel, nextLevel, showLevelUpPrompt, dismissLevelUpPrompt }}
     >
       {children}
     </LevelContext.Provider>

@@ -106,13 +106,13 @@ export default function TodayScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { todayCalories, streak, logAction, loggedActionIds, historyDays } = useApp();
-  const { maxAccessibleLevel, nextLevel } = useLevel();
+  const { activeLevel, nextLevel } = useLevel();
 
   const [justLoggedId, setJustLoggedId] = useState<string | null>(null);
 
   const availableActions = useMemo(
-    () => LEVEL_ACTIONS.filter((a) => a.packLevel <= maxAccessibleLevel).slice(0, 12),
-    [maxAccessibleLevel],
+    () => LEVEL_ACTIONS.filter((a) => a.packLevel <= activeLevel).slice(0, 12),
+    [activeLevel],
   );
 
   // Today's wins — every distinct action logged today, with how many times.
@@ -129,7 +129,7 @@ export default function TodayScreen() {
   }, [loggedActionIds]);
 
   // Rough target just for the gauge fill — the real target logic lives in LevelContext.
-  const target = maxAccessibleLevel <= 2 ? 180 : 250 + (maxAccessibleLevel - 3) * 100;
+  const target = activeLevel === 1 ? 100 : activeLevel === 2 ? 180 : 250 + (activeLevel - 3) * 100;
   const pct = (todayCalories / target) * 100;
   const smashed = todayCalories >= target;
   const gaugeColor = smashed ? "#C9A24B" : colors.neatGreen;
