@@ -30,14 +30,14 @@ export function LevelProvider({ children }: { children: React.ReactNode }) {
   const { isLevelOwned } = useIAP();
   const [dismissedForDate, setDismissedForDate] = useState<string | null>(null);
 
-  // Highest level reachable in sequence — paid levels only count if every
-  // level below them (3, then 4) has also been bought.
+  // Packs are independent purchases: any owned pack is usable on its own.
+  const isAccessible = (level: UnlockLevel) => level <= 2 || isLevelOwned(level as 3 | 4 | 5);
+
   const maxAccessibleLevel: UnlockLevel = useMemo(() => {
-    let level: UnlockLevel = 2;
-    if (isLevelOwned(3)) level = 3;
-    if (level === 3 && isLevelOwned(4)) level = 4;
-    if (level === 4 && isLevelOwned(5)) level = 5;
-    return level;
+    if (isLevelOwned(5)) return 5;
+    if (isLevelOwned(4)) return 4;
+    if (isLevelOwned(3)) return 3;
+    return 2;
   }, [isLevelOwned]);
 
   const [selectedLevel, setSelectedLevel] = useState<UnlockLevel | null>(null);
@@ -50,17 +50,17 @@ export function LevelProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const activeLevel: UnlockLevel =
-    selectedLevel !== null && selectedLevel <= maxAccessibleLevel ? selectedLevel : maxAccessibleLevel;
+    selectedLevel !== null && isAccessible(selectedLevel) ? selectedLevel : maxAccessibleLevel;
 
   const setActiveLevel = useCallback((level: UnlockLevel) => {
     setSelectedLevel(level);
     AsyncStorage.setItem(ACTIVE_LEVEL_KEY, String(level)).catch(() => {});
   }, []);
 
-  const nextLevel: UnlockLevel | null = maxAccessibleLevel < 5 ? ((maxAccessibleLevel + 1) as UnlockLevel) : null;
+  const nextLevel: UnlockLevel | null = ([3, 4, 5] as const).find((l) => !isLevelOwned(l)) ?? null;
 
-  const hitTargetToday = todayCalories >= targetFor(maxAccessibleLevel);
-  const unlockedLevel: UnlockLevel | null = hitTargetToday ? maxAccessibleLevel : null;
+  const hitTargetToday = todayCalories >= targetFor(activeLevel);
+  const unlockedLevel: UnlockLevel | null = hitTargetToday ? activeLevel : null;
 
   const todayKey = new Date().toISOString().slice(0, 10);
   const alreadyDismissedToday = dismissedForDate === todayKey;

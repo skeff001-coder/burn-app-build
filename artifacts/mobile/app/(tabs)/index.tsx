@@ -8,6 +8,7 @@ import { useColors } from "@/hooks/useColors";
 import { useApp } from "@/context/AppContext";
 import { useLevel } from "@/context/LevelContext";
 import { LEVEL_ACTIONS } from "@/data/levelActions";
+import { useIAP } from "@/context/IAPContext";
 
 const GAUGE_SIZE = 176;
 const STROKE = 11;
@@ -107,12 +108,16 @@ export default function TodayScreen() {
   const insets = useSafeAreaInsets();
   const { todayCalories, streak, logAction, loggedActionIds, historyDays } = useApp();
   const { activeLevel, nextLevel } = useLevel();
+  const { isLevelOwned } = useIAP();
 
   const [justLoggedId, setJustLoggedId] = useState<string | null>(null);
 
   const availableActions = useMemo(
-    () => LEVEL_ACTIONS.filter((a) => a.packLevel <= activeLevel).slice(0, 12),
-    [activeLevel],
+    () =>
+      LEVEL_ACTIONS.filter(
+        (a) => a.packLevel <= activeLevel && (a.packLevel <= 2 || isLevelOwned(a.packLevel as 3 | 4 | 5)),
+      ).slice(0, 12),
+    [activeLevel, isLevelOwned],
   );
 
   // Today's wins — every distinct action logged today, with how many times.

@@ -24,7 +24,7 @@ const FREE_LEVEL_NAMES: Record<1 | 2, string> = {
 export default function LevelsScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const { maxAccessibleLevel, activeLevel, setActiveLevel } = useLevel();
+  const { activeLevel, setActiveLevel } = useLevel();
   const { isLevelOwned, buyLevel, purchasing } = useIAP();
 
   // Which owned pack's exercise list is currently open in the modal, if any.
@@ -87,7 +87,6 @@ export default function LevelsScreen() {
             const pack = LEVEL_PACKS[level];
             const owned = isLevelOwned(level);
             const isPurchasing = purchasing === pack.productId;
-            const locked = !owned && level > maxAccessibleLevel + 1;
 
             const CardWrapper = owned ? TouchableOpacity : View;
             const wrapperProps = owned
@@ -127,8 +126,8 @@ export default function LevelsScreen() {
                 ) : (
                   <TouchableOpacity
                     onPress={() => handleUnlock(level)}
-                    disabled={locked || isPurchasing}
-                    style={[styles.unlockPill, { backgroundColor: pack.color, opacity: locked ? 0.4 : 1 }]}
+                    disabled={isPurchasing}
+                    style={[styles.unlockPill, { backgroundColor: pack.color }]}
                   >
                     {isPurchasing ? (
                       <ActivityIndicator size="small" color="#000" />
